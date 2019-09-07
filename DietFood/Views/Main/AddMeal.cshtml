@@ -1,0 +1,42 @@
+﻿@model  DietFood.Models.Meal
+
+@using DietFood.Models;
+
+    <div class="row">
+        <div class="col-lg-6 mb-4" id="panel">
+            <!-- Content Column -->
+            @*@Html.Partial("_AddDish", new Dish() { MealId = Model.Id })*@
+            @if (ViewBag.DishId == null)
+            {
+                <partial name="_AddDish" model="new Dish() { MealId = Model.Id }"></partial>
+            }
+            else
+            {
+                <partial name="_AddDish" model="Model.Dishes[(int)ViewBag.DishId]"></partial>
+            }
+        </div>
+        <div class="col-lg-6 mb-4" id="dishes">
+
+            <!-- Illustrations -->
+
+            @if (Model.Dishes != null)
+            {
+                @foreach (var item in Model.Dishes)
+                {
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">@item.Product.Name</h6>
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                test
+
+                            </p>
+                            @*<a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on unDraw &rarr;</a>*@
+                        </div>
+                    </div>
+                }
+            }
+
+        </div>
+    </div>

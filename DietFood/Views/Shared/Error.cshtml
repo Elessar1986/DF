@@ -1,0 +1,23 @@
+﻿@model System.Exception
+
+    <div class="text-center">
+        <div class="error mx-auto" data-text="Error">Error</div>
+        <p class="lead text-gray-800 mb-5">@Model.Message</p>
+        @if (Model.InnerException != null)
+        {
+            <p class="text-gray-500 mb-0">@Model.InnerException.Message</p>
+        }
+        else
+        {
+            <p class="text-gray-500 mb-0">No InnerException</p>
+        }
+        <button onclick="Back();">&larr; Back to Dashboard</button>
+    </div>
+
+<script>
+
+    function Back() {
+        window.history.back();
+    }
+
+</script>

@@ -1,0 +1,61 @@
+﻿@model  IEnumerable<DietFood.Models.Week>
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Недели</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Программа</th>
+                        <th>Заполненых дней</th>
+                        <th>Создана</th>
+                        @*<th>Изменена</th>*@
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Название</th>
+                        <th>Программа</th>
+                        <th>Заполненых дней</th>
+                        <th>Создана</th>
+                        @*<th>Изменена</th>*@
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    
+                    @foreach (var item in Model)
+                    {
+                        var t = @Url.Action("EditWeek", new { weekId = item.Id });
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.DietProgram.Name</td>
+                        <td>@item.Days.Where(x => x.Done >= 3).Count() </td>
+                        <td>@item.Created.ToShortDateString()</td>
+                        @*<td>@item.LastUpdate.ToShortDateString()</td>*@
+                        <td><a href="@Url.Action("DeleteWeek", "Main", new { weekId = item.Id })" 
+                               onclick="return confirm('Все данные по этой неделе будут удалены! Вы уверены?')">
+                            <i class="fas fa-fw fa-trash-alt text-danger"></i>
+                            </a></td>
+                        <td><a href="@Url.Action("EditWeek", "Main", new { weekId = item.Id })"><i class="fas fa-fw fa-edit text-warning"></i></a></td>
+                    </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+</script>

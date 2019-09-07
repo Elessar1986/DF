@@ -1,0 +1,81 @@
+﻿@model  DietFood.Models.Day
+
+@using DietFood.Models.Enums
+
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <a href="@Url.Action("EditWeek", new { weekId = Model.WeekId })" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-arrow-alt-circle-left fa-sm text-white-50"></i> Назад</a>
+    </div>
+
+    <div class="row">
+
+        @if (Model.Meals != null)
+        {
+            //foreach (var item in Model.Meals)
+            for (int i = 0; i < Model.Meals.Count; i++)
+            {
+                <div class="col-xl-3 col-md-6 mb-4">
+
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-lg font-weight-bold text-primary text-uppercase mb-1">@Model.Meals[i].Name</div>
+
+                                    @{
+                                        if (Model.Meals != null)
+                                        {
+
+                                            <div class="h6 mb-0 font-weight-bold text-gray-800">Кол-во блюд: @Model.Meals[i].Done</div>
+                                        }
+                                        else
+                                        {
+                                            <div class="h6 mb-0 font-weight-bold text-gray-800">Кол-во блюд: 0</div>
+                                        }
+
+                                    }
+                                    <div class="text-xs mb-0 font-weight-bold text-gray-800">Калории: от @Model.Meals[i].MinCalories до @Model.Meals[i].MaxCalories</div>
+                                </div>
+                                <div class="col-auto">
+
+                                    <a href="@Url.Action("EditMeal", "Main", new { mealId = Model.Meals[i].Id })">
+                                        <i class="fas fa-edit fa-2x text-warning"></i>
+                                    </a>
+                                    @if (i >= 3)
+                                    {
+                                        <a href="@Url.Action("DeleteMeal","Main", new { dayId = Model.Id, mealId = Model.Meals[i].Id })"><i class="fas fa-trash fa-2x text-danger"></i></a>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            }
+        }
+
+        @if (Model.Meals.Count < 5)
+        {
+            <div class="col-xl-3 col-md-6 mb-4">
+                <a href="@Url.Action("AddMeal", "Main", new { dayId = Model.Id, weekId = Model.WeekId })">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-lg font-weight-bold text-primary text-uppercase mb-1">Добавить</div>
+
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-plus fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+
+
+
+    </div>

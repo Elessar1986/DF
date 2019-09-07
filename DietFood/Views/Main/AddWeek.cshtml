@@ -1,0 +1,53 @@
+﻿@model DietFood.Models.Week
+
+<div class="row">
+
+    <!-- Content Column -->
+    <div class="col-lg-6 mb-4">
+
+        <!-- Project Card Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-success">Добавление блюда</h6>
+            </div>
+            <div class="card-body">
+                <form class="user" asp-action="AddWeek" method="post">
+
+                    <div class="form-group">
+                        <input asp-for="Name" type="text" class="form-control " placeholder="Название недели">
+                        <span asp-validation-for="Name"></span>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-6 mb-3 mb-sm-0">
+                            <select asp-for="DietProgramId" class="form-control" asp-items="ViewBag.Programs">
+                                <option selected="selected" disabled="disabled">Выберите программу</option>
+                            </select>
+                            <span asp-validation-for="Name"></span>
+                        </div>
+                        <div class="col-sm-6">
+                           
+                        </div>
+                    </div>                   
+
+                    <button class="btn btn-success btn-user btn-block" type="submit">
+                        Добавить неделю
+                    </button>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-lg-6 mb-4">
+
+        <!-- Illustrations -->
+        <div class="card shadow mb-4">
+
+        </div>
+
+
+
+    </div>
+</div>

@@ -1,0 +1,49 @@
+﻿@model  DietFood.Models.Calculator.ClientWeightVM
+
+
+<div class="col-lg-6 ">
+
+    <!-- Project Card Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-success">Вес клиента</h6>
+        </div>
+        <div class="card-body">
+            <form class="user" asp-action="DayCalculationByWeight" method="get">
+
+                <div class="form-group row">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <select asp-for="Weight"  class="form-control" name="weight">
+                            <option selected="selected" disabled="disabled">Выберите вес</option>
+                            @for (int i = 40; i <= 100; i+=5)
+                            {
+                                <option>@i</option>
+                            }
+                        </select>
+                        <input asp-for="DayId" type="hidden" />
+                    </div>
+                    <div class="col-sm-6">
+                        <button class="btn btn-success btn-user btn-block" type="submit">
+                            Пересчитать
+                        </button>
+                    </div>
+                </div>
+
+                
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<div class="col-lg-6 mb-4">
+
+    <!-- Illustrations -->
+    <div class="card shadow mb-4">
+
+    </div>
+
+
+
+</div>

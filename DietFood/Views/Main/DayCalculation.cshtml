@@ -1,0 +1,228 @@
+﻿@model DietFood.Models.Calculation
+
+@using DietFood.Models.Calculator
+
+    <div class="row">
+
+       <partial  name="_ClientWeight" model="new ClientWeightVM() {DayId = Model.DayId }" />
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-dark shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Общий вес</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.DishWeightSum </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-carrot fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Белки</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Proteins</div>
+                            <div class="text-xs mb-0 font-weight-bold text-gray-800"> @(Math.Round((Model.Proteins / ViewBag.Proteins) * 100, 2))% от @ViewBag.Proteins </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-egg fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Жиры</div>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">@Model.Fats</div>
+                                </div>
+                            </div>
+                            <div class="text-xs mb-0 font-weight-bold text-gray-800"> @(Math.Round((Model.Fats / ViewBag.Fats) * 100, 2))% от @ViewBag.Fats </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-hamburger fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Requests Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Углеводы</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Carbohydrates</div>
+                            <div class="text-xs mb-0 font-weight-bold text-gray-800"> @(Math.Round((Model.Carbohydrates / ViewBag.Carbohydrates) * 100, 2))% от @ViewBag.Carbohydrates </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-carrot fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Калории</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Calories</div>
+                            <div class="text-xs mb-0 font-weight-bold text-gray-800"> @(Math.Round((Model.Calories / ViewBag.Calories) * 100, 2))% от @ViewBag.Calories </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-walking fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Завтрак</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@(Math.Round(@Model.BreakfastCoefficient,2)) %</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-egg fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Обед</div>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">@(Math.Round(@Model.LunchCoefficient,2)) %</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-hamburger fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Requests Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Ужин</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"> @(Math.Round(@Model.DinnerCoefficient,2)) %</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-carrot fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">@Model.Day.Week.Name / @Model.Day.DayName</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+                    @for (int i = 0; i < 5; i++)
+                    {
+                        if (Model.DishCalculations.Count(x => x.MealType == i) > 0)
+                        {
+
+                            <thead>
+                                <tr>
+                                    <th>Название</th>
+                                    <th>Вес</th>
+                                    <th>Калории</th>
+                                    <th>Белки</th>
+                                    <th>Жиры</th>
+                                    <th>Углеводы</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                @foreach (var item in Model.DishCalculations.Where(x => x.MealType == i))
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        @if(item.ConstWeight > 0)
+                                        {
+                                            <td class="text-danger">@item.ConstWeight</td>
+                                        }
+                                        else
+                                        {
+                                            <td>@item.Weight</td>
+                                        }
+                                        <td>@item.Calories</td>
+                                        <td>@item.Proteins </td>
+                                        <td>@item.Fats</td>
+                                        <td>@item.Carbohydrates</td>
+                                        @*<td>
+                                            <a href="@Url.Action("DeleteWeek", "Main", new { weekId = item.Id })"
+                                               onclick="return confirm('Все данные по этой неделе будут удалены! Вы уверены?')">
+                                                <i class="fas fa-fw fa-trash-alt text-danger"></i>
+                                            </a>
+                                </td>*@
+                                        @*<td><a href="@Url.Action("EditWeek", "Main", new { weekId = item.Id })"><i class="fas fa-fw fa-edit text-warning"></i></a></td>*@
+                                    </tr>
+                                }
+
+                            </tbody>
+                        }
+                    }
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+</script>

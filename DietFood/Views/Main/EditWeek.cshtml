@@ -1,0 +1,39 @@
+﻿@model  DietFood.Models.Week
+
+@using DietFood.Models.Enums
+
+    <div class="row">
+
+        @for (int i = 1; i < 8; i++)
+        {
+            <div class="col-xl-3 col-md-6 mb-4">
+             
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <a class="card-link-week" href="@Url.Action("EditDay", "Main", new { weekId = Model.Id, dayName = (DaysOfWeek)i })">
+                                <div class="col mr-2">
+                                    <div class="text-lg font-weight-bold text-primary text-uppercase mb-1">@((DaysOfWeek)i)</div>
+                                    @*<div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>*@
+                                    @{
+                                        var day = Model.Days.FirstOrDefault(x => x.DayName == (DaysOfWeek)i);
+                                        <div class="h6 mb-0 font-weight-bold text-gray-800">Заполненые приемы еды: @(day?.Done != null ? day.Done : 0)</div>
+                                    }
+                                </div>
+                            </a>
+                            @if (day != null && day.Done >= 3)
+                            {
+                                <a href="@Url.Action("CalculateDay", new { dayId = day.Id })">
+                                    <div class="col-auto">
+                                        <i class="fas fa-calculator fa-2x text-info"></i>
+                                    </div>
+                                </a>
+                             }
+                            </div>
+                    </div>
+                </div>
+                   
+            </div>
+        }
+
+    </div>
