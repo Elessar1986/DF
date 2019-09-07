@@ -28,6 +28,10 @@ namespace DietFood.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Dish>()
+              .Property(c => c.IsInterval)
+               .HasConversion<int>();
+
             modelBuilder.Entity<Product>().HasData(
             new Product[]
             {
