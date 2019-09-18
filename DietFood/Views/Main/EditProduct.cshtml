@@ -1,0 +1,63 @@
+﻿@model DietFood.Models.Product
+
+<div class="row">
+
+    <!-- Content Column -->
+    <div class="col-lg-6 mb-4">
+
+        <!-- Project Card Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-success">Добавление блюда</h6>
+            </div>
+            <div class="card-body">
+                <form class="user" asp-action="EditProduct" method="post">
+
+                    <div class="form-group">
+                        <input asp-for="Name" type="text" class="form-control form-control-user" placeholder="Название програмы">
+                        <span asp-validation-for="Name"></span>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-6 mb-3 mb-sm-0">
+                            <input asp-for="Fats" type="text" class="form-control form-control-user decimal" placeholder="Жиры (на 1кг.)">
+                            <span asp-validation-for="Name"></span>
+                        </div>
+                        <div class="col-sm-6">
+                            <input asp-for="Proteins" type="text" class="form-control form-control-user decimal" placeholder="Белки (на 1кг.)">
+                            <span asp-validation-for="Fats"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-6 mb-3 mb-sm-0">
+                            <input asp-for="Carbohydrates" type="text" class="form-control form-control-user decimal" placeholder="Углеводы (на 1кг.)">
+                            <span asp-validation-for="Carbohydrates"></span>
+                        </div>
+                        <div class="col-sm-6">
+                            <input asp-for="Calories" type="text" class="form-control form-control-user decimal" placeholder="Калории (на 1кг.)">
+                            <span asp-validation-for="Calories"></span>
+                        </div>
+                    </div>
+                    <input asp-for="Id" type="hidden" />
+                    <button class="btn btn-success btn-user btn-block" type="submit">
+                        Сохранить 
+                    </button>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-lg-6 mb-4">
+
+        <!-- Illustrations -->
+        <div class="card shadow mb-4">
+            
+        </div>
+
+       
+
+    </div>
+</div>

@@ -1,0 +1,51 @@
+﻿@model  IEnumerable<DietFood.Models.Product>
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Недели</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Калории (на 100г.)</th>
+                        <th>Белки (на 100г.)</th>
+                        <th>Жиры (на 100г.)</th>
+                        <th>Углеводы (на 100г.)</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    
+                    @foreach (var item in Model)
+                    {
+                        var t = @Url.Action("EditWeek", new { weekId = item.Id });
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.Calories</td>
+                        <td>@item.Proteins</td>
+                        <td>@item.Fats</td>
+                        <td>@item.Carbohydrates</td>
+                        <td><a href="@Url.Action("DeleteProduct", "Main", new { productId = item.Id })" 
+                               onclick="return confirm('Вы уверены?')">
+                            <i class="fas fa-fw fa-trash-alt text-danger"></i>
+                            </a></td>
+                        <td><a href="@Url.Action("EditProduct", "Main", new { productId = item.Id })"><i class="fas fa-fw fa-edit text-warning"></i></a></td>
+                    </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+</script>
