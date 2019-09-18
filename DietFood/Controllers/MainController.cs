@@ -5,6 +5,7 @@ using DietFood.Models.Calculator;
 using DietFood.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -47,9 +48,156 @@ namespace DietFood.Controllers
                 if (ModelState.IsValid)
                 {
                     await _repository.AddProduct(data);
-                    return View("Index");
+                    return RedirectToAction("Products");
                 }
                 return View(data);
+            }
+            catch (Exception ex)
+            {
+                return View("Error", ex);
+            }
+        }
+
+        public IActionResult EditProduct(int productId)
+        {
+            try
+            {
+                var model = _repository.GetProduct(productId);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                return View("Error", ex);
+            }
+        }
+
+        public IActionResult Products()
+        {
+            try
+            {
+                var model = _repository.GetAllProducts();
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                return View("Error", ex);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditProduct(Product data)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _repository.UpdateProduct(data);
+                    return RedirectToAction("Products");
+                }
+                return View(data);
+            }
+            catch (Exception ex)
+            {
+                return View("Error", ex);
+            }
+        }
+
+        public IActionResult DeleteProduct(int productId)
+        {
+            try
+            {
+                _repository.DeleteProduct(productId);
+                return RedirectToAction("Products");
+            }
+            catch (Exception ex)
+            {
+                return View("Error", ex);
+            }
+        }
+
+        public IActionResult AddProgram()
+        {
+            try
+            {
+                return View();
+            }
+            catch (Exception ex)
+            {
+                return View("Error", ex);
+            }
+        }
+
+        public IActionResult EditProgram(int programId)
+        {
+            try
+            {
+                var model = _repository.GetProgram(programId);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                return View("Error", ex);
+            }
+        }
+
+        public IActionResult Programs()
+        {
+            try
+            {
+                var model = _repository.GetAllPrograms();
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                return View("Error", ex);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddProgram(DietProgram data)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    await _repository.AddProgram(data);
+                    return RedirectToAction("Programs");
+                }
+                return View(data); 
+            }
+            catch (Exception ex)
+            {
+                return View("Error", ex);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditProgram(DietProgram data)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _repository.UpdateProgram(data);
+                    return RedirectToAction("Programs");
+                }
+                return View(data);
+            }
+            catch (Exception ex)
+            {
+                return View("Error", ex);
+            }
+        }
+
+        public IActionResult DeleteProgram(int programId)
+        {
+            try
+            {
+                _repository.DeleteProgram(programId);
+                return RedirectToAction("Programs");
             }
             catch (Exception ex)
             {
@@ -265,13 +413,13 @@ namespace DietFood.Controllers
             }
         }
 
-        public IActionResult CalculateDay(int dayId)
+        public IActionResult CalculateDay(int dayId, int weight = 40)
         {
             try
             {
-                var model = _foodCalculate.CalculateDayInWeight(dayId, 40);
+                var model = _foodCalculate.CalculateDayInWeight(dayId, weight);
                 //_foodCalculate.CalculateDay(dayId);
-                return RedirectToAction("DayCalculation", new { weight = 40, dayId = dayId });
+                return RedirectToAction("DayCalculation", new { weight = weight, dayId = dayId });
             }
             catch (Exception ex)
             {
@@ -325,14 +473,13 @@ namespace DietFood.Controllers
         }
 
         [HttpPost]
-        public IActionResult CustomDayCalculation(int weight, int dayId, int[] constWeight)
+        public IActionResult CustomDayCalculation(int weight, int dayId, Dictionary<int,int> constWeight)
         {
             try
             {
-                var day = _repository.GetDay(dayId);
-                var model = day.Calculations.FirstOrDefault(x => x.ClientWeight == weight);
-                if (model == null) throw new Exception("Day not calculated!");
-                return View("DayCalculation", model);
+                _foodCalculate.CustomDayCalculate(weight, dayId, constWeight);
+
+                return Json(new { status = "ok" } );
 
             }
             catch (Exception ex)
@@ -340,5 +487,7 @@ namespace DietFood.Controllers
                 return View("Error", ex);
             }
         }
+
+
     }
 }

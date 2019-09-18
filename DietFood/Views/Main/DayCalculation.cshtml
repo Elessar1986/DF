@@ -1,6 +1,7 @@
 ﻿@model DietFood.Models.Calculation
 
 @using DietFood.Models.Calculator
+@using DietFood.Models.Enums
 
     <div class="row">
 
@@ -169,60 +170,145 @@
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered" width="100%" cellspacing="0">
-                    @for (int i = 0; i < 5; i++)
+                @for (int i = 0; i < 5; i++)
+                {
+                    if (Model.DishCalculations.Count(x => x.MealType == i) > 0)
                     {
-                        if (Model.DishCalculations.Count(x => x.MealType == i) > 0)
-                        {
 
-                            <thead>
+                        <thead>
+                            <tr>
+                                <th>@((MealName)i)</th>
+                                <th>Вес</th>
+                                <th>Калории</th>
+                                <th>Белки</th>
+                                <th>Жиры</th>
+                                <th>Углеводы</th>
+                                <th>Редактировать</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var item in Model.DishCalculations.Where(x => x.MealType == i))
+                            {
                                 <tr>
-                                    <th>Название</th>
-                                    <th>Вес</th>
-                                    <th>Калории</th>
-                                    <th>Белки</th>
-                                    <th>Жиры</th>
-                                    <th>Углеводы</th>
-
+                                    <td>@item.Name</td>
+                                    @if (item.ConstWeight > 0)
+                                    {
+                                        <td class="text-danger">@item.ConstWeight</td>
+                                    }
+                                    else
+                                    {
+                                        <td>@item.Weight</td>
+                                    }
+                                    <td>@item.Calories</td>
+                                    <td>@item.Proteins </td>
+                                    <td>@item.Fats</td>
+                                    <td>@item.Carbohydrates</td>
+                                    @if (item.ConstWeight > 0)
+                                    {
+                                        <td class="text-danger">@item.ConstWeight</td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <input dish-calc-id="@item.DishId" type="text" class="form-control ConstWeightEdit integer" />
+                                        </td>
+                                    }
                                 </tr>
-                            </thead>
+                            }
 
-                            <tbody>
-
-                                @foreach (var item in Model.DishCalculations.Where(x => x.MealType == i))
-                                {
-                                    <tr>
-                                        <td>@item.Name</td>
-                                        @if(item.ConstWeight > 0)
-                                        {
-                                            <td class="text-danger">@item.ConstWeight</td>
-                                        }
-                                        else
-                                        {
-                                            <td>@item.Weight</td>
-                                        }
-                                        <td>@item.Calories</td>
-                                        <td>@item.Proteins </td>
-                                        <td>@item.Fats</td>
-                                        <td>@item.Carbohydrates</td>
-                                        @*<td>
-                                            <a href="@Url.Action("DeleteWeek", "Main", new { weekId = item.Id })"
-                                               onclick="return confirm('Все данные по этой неделе будут удалены! Вы уверены?')">
-                                                <i class="fas fa-fw fa-trash-alt text-danger"></i>
-                                            </a>
-                                </td>*@
-                                        @*<td><a href="@Url.Action("EditWeek", "Main", new { weekId = item.Id })"><i class="fas fa-fw fa-edit text-warning"></i></a></td>*@
-                                    </tr>
-                                }
-
-                            </tbody>
-                        }
+                        </tbody>
                     }
+                }
+                <tbody>
+                    <tr>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td>
+                            <button class="btn btn-success btn-user btn-block" id="CustomDayCalculationSubmit" type="button">
+                                Пересчитать
+                            </button>
+                        </td>
+                    </tr>
+
+                </tbody>
+                <tbody>
+                    <tr>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td>
+                            <a class="btn btn-success btn-user btn-block" href="@Url.Action("CalculateDay", new { weight= Model.ClientWeight, dayId =Model.DayId })">
+                                Сбросить
+                            </a>
+                        </td>
+                    </tr>
+
+                </tbody>
+
             </table>
+          
         </div>
     </div>
 </div>
 
+@section  scripts{ 
+
 
 <script>
+    $("#CustomDayCalculationSubmit").on("click", function () {
 
+        var dict = [];
+
+        $(".ConstWeightEdit").each(function () {
+            var currentElement = $(this);
+            var value = currentElement.val(); 
+            var key = currentElement.attr("dish-calc-id");
+            if (value != '') {
+                
+                dict.push({
+                    Key: key,
+                    Value: value
+                });
+            }
+         
+            
+        });
+
+            $.ajax({
+                type: "POST",
+                async: false,
+                cache: false,
+                url: "CustomDayCalculation",
+                data: {
+                    weight: @Model.ClientWeight,
+                    dayId: @Model.DayId,
+                    constWeight: dict
+                },
+                success: function (data) {
+                    if (data.status = 'ok') {
+                        window.location = "DayCalculation?weight=" + @Model.ClientWeight + "&dayId=" + @Model.DayId;
+                    }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert("Error");
+                console.log("Error while loading popup:");
+                console.log(jqXHR);
+                console.log(textStatus);
+                console.log(errorThrown);
+            }
+        });
+
+    })
+
+    
 </script>
+}

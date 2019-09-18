@@ -95,12 +95,6 @@ namespace DietFood.Helpers
             await _context.SaveChangesAsync();
         }
 
-        public async Task AddProgram(DietProgram program)
-        {
-            await _context.DietPrograms.AddAsync(program);
-            await _context.SaveChangesAsync();
-        }
-
         public async Task AddWeek(Week week)
         {
             week.Created = DateTime.Now;
@@ -281,6 +275,85 @@ namespace DietFood.Helpers
             _context.Dishes.Remove(dish);
             _context.Meals.Update(dish.Meal);
             _context.SaveChanges();
+        }
+
+        public async Task<int> AddProgram(DietProgram data)
+        {
+            await _context.DietPrograms.AddAsync(data);
+            await _context.SaveChangesAsync();
+            return data.Id;
+        }
+
+        public DietProgram GetProgram(int programId)
+        {
+            var res = _context.DietPrograms.FirstOrDefault(x =>x.Id == programId);
+            return res;
+        }
+
+        public List<DietProgram> GetAllPrograms()
+        {
+            var res = _context.DietPrograms.ToList();
+            return res;
+        }
+
+        public void DeleteProgram(int programId)
+        {
+            var res = _context.DietPrograms.FirstOrDefault(x => x.Id == programId);
+            if (res != null) _context.DietPrograms.Remove(res);
+            _context.SaveChanges();
+        }
+
+        public void UpdateProgram(DietProgram data)
+        {
+            var res = _context.DietPrograms.FirstOrDefault(x => x.Id == data.Id);
+            if (res != null)
+            {
+                res.Calories = data.Calories;
+                res.Carbohydrates = data.Carbohydrates;
+                res.Fats = data.Fats;
+                res.Name = data.Name;
+                res.Proteins = data.Proteins;
+                _context.DietPrograms.Update(res);
+                _context.SaveChanges();
+            }
+            else throw new Exception($"No DietProgram whith id : '{data.Id}'!");
+            
+        }
+
+        public Product GetProduct(int productId)
+        {
+            var res = _context.Products.FirstOrDefault(x => x.Id == productId);
+            return res;
+        }
+
+        public List<Product> GetAllProducts()
+        {
+            var res = _context.Products.ToList();
+            return res;
+        }
+
+        public void DeleteProduct(int productId)
+        {
+            var res = _context.Products.FirstOrDefault(x => x.Id == productId);
+            if (res != null) _context.Products.Remove(res);
+            _context.SaveChanges();
+        }
+
+        public void UpdateProduct(Product data)
+        {
+            var res = _context.Products.FirstOrDefault(x => x.Id == data.Id);
+            if (res != null)
+            {
+                res.Calories = data.Calories;
+                res.Carbohydrates = data.Carbohydrates;
+                res.Fats = data.Fats;
+                res.Name = data.Name;
+                res.Proteins = data.Proteins;
+                _context.Products.Update(res);
+                _context.SaveChanges();
+            }
+            else throw new Exception($"No Product whith id : '{data.Id}'!");
+
         }
     }
 }

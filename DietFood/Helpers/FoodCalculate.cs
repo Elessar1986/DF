@@ -74,8 +74,27 @@ namespace DietFood.Helpers
             return new CalculateModel();
         }
 
-        public CalculateModel CustomDayCalculate(int weight, int dayId, int[] constWeight)
+        public CalculateModel CustomDayCalculate(int weight, int dayId, Dictionary<int, int> constWeight)
         {
+            var day = _repository.GetDay(dayId);
+
+            defaultDayOptions = new DayCalculation(day.Meals.Sum(x => x.Dishes.Count))
+            {
+                Calories = day.Week.DietProgram.Calories * weight,
+                Proteins = day.Week.DietProgram.Proteins * weight,
+                Fats = day.Week.DietProgram.Fats * weight,
+                Carbohydrates = day.Week.DietProgram.Carbohydrates * weight,
+                BreakfastCoefficient = 40,
+                LunchCoefficient = 40,
+                DinnerCoefficient = 20
+            };
+
+            var dishList = GetDishParamList( day.Meals /*day.Calculations.FirstOrDefault(x => x.ClientWeight == weight).DishCalculations*/, constWeight)
+                .OrderByDescending(x => x.GetInterval).ToList();
+
+            CalculateBestDay(dishList);
+
+            WriteCalculation(day, dishList, weight);
 
             return new CalculateModel();
         }
@@ -133,43 +152,7 @@ namespace DietFood.Helpers
                 _repository.AddDishCalculation(new DishCalculation
                 {
                     CalculationId = calc.Id,
-                    MealType = dishes[i].MealType,
-                    Weight = bestDayOptions.DishWeight[i],
-                    ConstWeight = bestDayOptions.DishConstWeight[i],
-                    Calories = bestDayOptions.DishWeight[i] * dishes[i].CaloriesPer100 / 100,
-                    Proteins = bestDayOptions.DishWeight[i] * dishes[i].ProteinsPer100 / 100,
-                    Fats = bestDayOptions.DishWeight[i] * dishes[i].FatsPer100 / 100,
-                    Carbohydrates = bestDayOptions.DishWeight[i] * dishes[i].CarbohydratesPer100 / 100,
-                    Name = dishes[i].Name
-                });
-            }
-
-        }
-
-        private void UpdateCalculation(Day day, List<DishParam> dishes, int weight, int Id)
-        {
-            //var calc = 
-            var calc = new Calculation
-            {
-
-                DayId = day.Id,
-                ClientWeight = weight,
-                Calories = bestDayOptions.Calories,
-                Proteins = bestDayOptions.Proteins,
-                Fats = bestDayOptions.Fats,
-                Carbohydrates = bestDayOptions.Carbohydrates,
-                BreakfastCoefficient = bestDayOptions.BreakfastCoefficient,
-                LunchCoefficient = bestDayOptions.LunchCoefficient,
-                DinnerCoefficient = bestDayOptions.DinnerCoefficient,
-                DayCoefficient = bestDayOptions.DayCoefficient,
-                Created = DateTime.Now
-            };
-            _repository.AddCalculation(calc);
-            for (int i = 0; i < bestDayOptions.DishWeight.Length; i++)
-            {
-                _repository.AddDishCalculation(new DishCalculation
-                {
-                    CalculationId = calc.Id,
+                    DishId = dishes[i].Id,
                     MealType = dishes[i].MealType,
                     Weight = bestDayOptions.DishWeight[i],
                     ConstWeight = bestDayOptions.DishConstWeight[i],
@@ -195,6 +178,7 @@ namespace DietFood.Helpers
                     {
                         res.Add(new DishParam
                         {
+                            Id = dish.Id,
                             ProteinsPer100 = dish.Product.Proteins,
                             CaloriesPer100 = dish.Product.Calories,
                             CarbohydratesPer100 = dish.Product.Carbohydrates,
@@ -213,6 +197,7 @@ namespace DietFood.Helpers
                     {
                         res.Add(new DishParam
                         {
+                            Id = dish.Id,
                             ProteinsPer100 = dish.Product.Proteins,
                             CaloriesPer100 = dish.Product.Calories,
                             CarbohydratesPer100 = dish.Product.Carbohydrates,
@@ -230,9 +215,113 @@ namespace DietFood.Helpers
             return res;
         }
 
+        private List<DishParam> GetDishParamList(List<Meal> meals, Dictionary<int, int> constWeight)
+        {
+            var res = new List<DishParam>();
 
+            for (int i = 0; i < meals.Count; i++)
+            {
+                    foreach (var dish in meals[i].Dishes)
+                    {
+                        if (dish.IsInterval)
+                        {
+                        var newDishParam = new DishParam
+                        {
+                            Id = dish.Id,
+                            ProteinsPer100 = dish.Product.Proteins,
+                            CaloriesPer100 = dish.Product.Calories,
+                            CarbohydratesPer100 = dish.Product.Carbohydrates,
+                            FatsPer100 = dish.Product.Fats,
+                            Name = dish.Product.Name,
+                            MealType = i,
+                        };
+                        if (constWeight.ContainsKey(dish.Id))
+                        {
+                            newDishParam.ConstWeight = constWeight[dish.Id];
+                            newDishParam.PossibleWeight = constWeight[dish.Id];
+                            newDishParam.IsInterval = false;
+                        }
+                        else
+                        {
+                            newDishParam.MinWeight = dish.MinWeight;
+                            newDishParam.MaxWeight = dish.MaxWeight;
+                            newDishParam.PossibleWeight = dish.MinWeight + (dish.MaxWeight - dish.MinWeight) / 4;
+                            newDishParam.PossibleMaxWeight = dish.MaxWeight;
+                            newDishParam.PossibleMinWeight = dish.MinWeight;
+                            newDishParam.IsInterval = dish.IsInterval;
+                        }
+                        res.Add(newDishParam);
+                    }
+                        else
+                        {
+                            res.Add(new DishParam
+                            {
+                                Id = dish.Id,
+                                ProteinsPer100 = dish.Product.Proteins,
+                                CaloriesPer100 = dish.Product.Calories,
+                                CarbohydratesPer100 = dish.Product.Carbohydrates,
+                                FatsPer100 = dish.Product.Fats,
+                                Name = dish.Product.Name,
+                                ConstWeight = dish.ConstWeight,
+                                PossibleWeight = dish.ConstWeight,
+                                MealType = i,
+                                IsInterval = dish.IsInterval
+                            });
+                        }
+                    }
 
-        private void CalculateBestDay(List<DishParam> dishes, int i = 0, int min = -1, int max = -1)
+                //var dish = _repository.GetDish(dishCalc[i].DishId);
+
+                //if (dish.IsInterval)
+                //{
+                //    var newDishParam = new DishParam
+                //    {
+                //        ProteinsPer100 = dish.Product.Proteins,
+                //        CaloriesPer100 = dish.Product.Calories,
+                //        CarbohydratesPer100 = dish.Product.Carbohydrates,
+                //        FatsPer100 = dish.Product.Fats,
+                //        Name = dish.Product.Name,
+                //        MealType = i,
+                //    };
+                //    if(constWeight.ContainsKey(dishCalc[i].Id))
+                //    {
+                //        newDishParam.ConstWeight = constWeight[dishCalc[i].Id];
+                //        newDishParam.PossibleWeight = constWeight[dishCalc[i].Id];
+                //        newDishParam.IsInterval = false;
+                //    }
+                //    else
+                //    {
+                //        newDishParam.MinWeight = dish.MinWeight;
+                //        newDishParam.MaxWeight = dish.MaxWeight;
+                //        newDishParam.PossibleWeight = dish.MinWeight + (dish.MaxWeight - dish.MinWeight) / 4;
+                //        newDishParam.PossibleMaxWeight = dish.MaxWeight;
+                //        newDishParam.PossibleMinWeight = dish.MinWeight;
+                //        newDishParam.IsInterval = dish.IsInterval;
+                //    }
+                //    res.Add(newDishParam);
+                //}
+                //else
+                //{
+                //    res.Add(new DishParam
+                //    {
+                //        ProteinsPer100 = dish.Product.Proteins,
+                //        CaloriesPer100 = dish.Product.Calories,
+                //        CarbohydratesPer100 = dish.Product.Carbohydrates,
+                //        FatsPer100 = dish.Product.Fats,
+                //        Name = dish.Product.Name,
+                //        ConstWeight = dish.ConstWeight,
+                //        PossibleWeight = dish.ConstWeight,
+                //        MealType = i,
+                //        IsInterval = dish.IsInterval
+                //    });
+
+                //}
+            }
+
+            return res;
+        }
+
+        private void CalculateBestDay(List<DishParam> dishes, int i = 0 )
         {
             iterCount++;
             if (dishes[i].IsInterval && i < dishes.Count)

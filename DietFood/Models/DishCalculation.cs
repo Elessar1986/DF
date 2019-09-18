@@ -9,6 +9,8 @@ namespace DietFood.Models
     {
         public int Id { get; set; }
 
+        public int DishId { get; set; }
+
         public string Name { get; set; }
 
         public int MealType { get; set; }

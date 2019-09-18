@@ -34,7 +34,15 @@ namespace DietFood.Helpers.Abstract
 
         Task AddProduct(Product product);
 
-        Task AddProgram(DietProgram program);
+        Task<int> AddProgram(DietProgram program);
+
+        DietProgram GetProgram(int programId);
+
+        List<DietProgram> GetAllPrograms();
+
+        void DeleteProgram(int programId);
+
+        void UpdateProgram(DietProgram data);
 
         Task AddWeek(Week week);
 
@@ -53,5 +61,13 @@ namespace DietFood.Helpers.Abstract
         DishCalculation AddDishCalculation(DishCalculation dishCalculation);
 
         void DeleteCalculation(int calcId);
+
+        Product GetProduct(int productId);
+
+        List<Product> GetAllProducts();
+
+        void DeleteProduct(int productId);
+
+        void UpdateProduct(Product data);
     }
 }
