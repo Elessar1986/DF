@@ -29,9 +29,9 @@ namespace DietFood
         {
             var optionsBuilder = new DbContextOptionsBuilder<MyContext>();
             var options = optionsBuilder
-                    .UseMySQL("server=localhost;UserId=root;Password=;database=diet_food;")
-                    //.UseSqlServer(@"Data Source=UAPSPC307-13\SQLEXPRESS;Initial Catalog=DietFood;Integrated Security=True")
-                    .Options;
+                    //.UseMySQL("server=localhost;UserId=root;Password=;database=diet_food;")
+                    .UseSqlServer(@"workstation id=dietfiid.mssql.somee.com;packet size=4096;user id=qweasd123123_SQLLogin_1;pwd=uf153ljphn;data source=dietfiid.mssql.somee.com;persist security info=False;initial catalog=dietfiid")
+                                      .Options;
             services.AddSingleton<IRepositoryHelper>(new RepositoryHelper(new MyContext(options)));
             services.AddSession();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
