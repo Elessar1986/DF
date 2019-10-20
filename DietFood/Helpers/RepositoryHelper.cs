@@ -102,7 +102,7 @@ namespace DietFood.Helpers
             if (check == null)
             {
                 _context.Products.Add(product);
-                _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
             return _context.Products.FirstOrDefault(x => x.Name == product.Name).Id;
         }

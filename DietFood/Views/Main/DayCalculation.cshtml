@@ -5,7 +5,34 @@
 
     <div class="row">
 
-       <partial  name="_ClientWeight" model="new ClientWeightVM() {DayId = Model.DayId }" />
+        <partial name="_ClientWeight" model="new ClientWeightVM() {DayId = Model.DayId }" />
+
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-success">Печать в PDF</h6>
+                </div>
+                <div class="card-body">
+                        <div class=" row">
+                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                <a class="btn btn-info btn-user btn-block" 
+                                   href="@Url.Action("DownloadAllWeightPDF", "Main", new { dayId = Model.DayId, weight = Model.ClientWeight})" target="_blank">
+                                    Печать на все веса
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a class="btn btn-info btn-user btn-block"
+                                    href="@Url.Action("DownloadDayCalcPDF", "Main", new { dayId = Model.DayId, weight = Model.ClientWeight})" target="_blank">
+                                    Печать 
+                                </a>
+                            </div>
+                        </div>
+                </div>
+            </div>
+
+
+
+        </div>
 
     </div>
 

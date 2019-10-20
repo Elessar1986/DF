@@ -17,10 +17,12 @@ namespace DietFood.Controllers
     {
         IRepositoryHelper _repository;
         FoodCalculate _foodCalculate;
+        PdfHelper _pdfHelper;
         public MainController(IRepositoryHelper repository)
         {
             _repository = repository;
             _foodCalculate = new FoodCalculate(_repository);
+            _pdfHelper = new PdfHelper();
         }
 
         public IActionResult Index()
@@ -697,6 +699,32 @@ namespace DietFood.Controllers
             }
         }
 
+        public FileResult DownloadDayCalcPDF(int dayId, int weight)
+        {
+            try
+            {
+                var day = _repository.GetDay(dayId);
+                var model = day.Calculations.FirstOrDefault(x => x.ClientWeight == weight);
+                var res = _pdfHelper.CreateTable(model, day.Week.Name, day.Week.DietProgram.Name, day.DayName, weight);
+                return File(res, "application/pdf", $"{DateTime.Now}_calculation.pdf");
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
 
+        public FileResult DownloadAllWeightPDF()
+        {
+            try
+            {
+                var res = _pdfHelper.CreateTable();
+                return File(res, "application/pdf");
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }
