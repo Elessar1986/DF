@@ -30,7 +30,7 @@ namespace DietFood
             var optionsBuilder = new DbContextOptionsBuilder<MyContext>();
             var options = optionsBuilder
                     //.UseMySQL("server=localhost;UserId=root;Password=;database=diet_food;")
-                    .UseSqlServer(@"workstation id=dietfiid.mssql.somee.com;packet size=4096;user id=qweasd123123_SQLLogin_1;pwd=uf153ljphn;data source=dietfiid.mssql.somee.com;persist security info=False;initial catalog=dietfiid")
+                    .UseSqlServer(@"workstation id=dietfood.mssql.somee.com;packet size=4096;user id=qweasd123123_SQLLogin_1;pwd=uf153ljphn;data source=dietfood.mssql.somee.com;persist security info=False;initial catalog=dietfood")
                                       .Options;
             services.AddSingleton<IRepositoryHelper>(new RepositoryHelper(new MyContext(options)));
             services.AddSession();

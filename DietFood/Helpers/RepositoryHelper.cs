@@ -1,5 +1,6 @@
 ﻿using DietFood.Helpers.Abstract;
 using DietFood.Models;
+using DietFood.Models.Calculator;
 using DietFood.Models.Enums;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -89,10 +90,67 @@ namespace DietFood.Helpers
             return dish;
         }
 
-        public async Task AddProduct(Product product)
+        public async Task AddIngredient(Ingredient ingredient)
         {
-            await _context.Products.AddAsync(product);
+            await _context.Ingredients.AddAsync(ingredient);
             await _context.SaveChangesAsync();
+        }
+
+        public int AddProduct(Product product)
+        {
+            var check = _context.Products.FirstOrDefault(x => x.Name == product.Name);
+            if (check == null)
+            {
+                _context.Products.Add(product);
+                _context.SaveChangesAsync();
+            }
+            return _context.Products.FirstOrDefault(x => x.Name == product.Name).Id;
+        }
+
+        public void AddProductIngredient(ProductIngredient data)
+        {
+            _context.ProductIngredients.Add(data);
+            _context.SaveChanges();
+            UpdateProduct(data.ProductId);
+
+        }
+
+        public void DeleteProductIngredient(int itemId)
+        {
+            //TODO: 
+            var prodIngr = _context.ProductIngredients.FirstOrDefault(x => x.Id == itemId);
+            _context.ProductIngredients.Remove(prodIngr);
+            _context.SaveChanges();
+            UpdateProduct(prodIngr.ProductId);
+        }
+
+        private void UpdateProduct(int productId)
+        {
+            var product = _context.Products.FirstOrDefault(x => x.Id == productId);
+            var progIngedSum = new ProductIngredientCalc();
+            if (product.ProductIngredients.Count > 0)
+            {
+                foreach (var item in product.ProductIngredients)
+                {
+                    progIngedSum.Calories += item.Ingredient.Calories / 100 * item.Weight;
+                    progIngedSum.Proteins += item.Ingredient.Proteins / 100 * item.Weight;
+                    progIngedSum.Fats += item.Ingredient.Fats / 100 * item.Weight;
+                    progIngedSum.Carbohydrates += item.Ingredient.Carbohydrates / 100 * item.Weight;
+                    progIngedSum.Weight += item.Weight;
+                }
+                product.Calories = Math.Round(progIngedSum.Calories / progIngedSum.Weight * 100, 2);
+                product.Proteins = Math.Round(progIngedSum.Proteins / progIngedSum.Weight * 100, 2);
+                product.Fats = Math.Round(progIngedSum.Fats / progIngedSum.Weight * 100, 2);
+                product.Carbohydrates = Math.Round(progIngedSum.Carbohydrates / progIngedSum.Weight * 100, 2);
+            }
+            else
+            {
+                product.Calories = 0;
+                product.Proteins = 0;
+                product.Fats = 0;
+                product.Carbohydrates = 0;
+            }
+            _context.SaveChanges();
         }
 
         public async Task AddWeek(Week week)
@@ -320,9 +378,21 @@ namespace DietFood.Helpers
             
         }
 
+        public Ingredient GetIngredient(int ingredientId)
+        {
+            var res = _context.Ingredients.FirstOrDefault(x => x.Id == ingredientId);
+            return res;
+        }
+
         public Product GetProduct(int productId)
         {
-            var res = _context.Products.FirstOrDefault(x => x.Id == productId);
+            var res = _context.Products.Include(x => x.ProductIngredients).ThenInclude(x => x.Ingredient).FirstOrDefault(x => x.Id == productId);
+            return res;
+        }
+
+        public List<Ingredient> GetAllIngredients()
+        {
+            var res = _context.Ingredients.ToList();
             return res;
         }
 
@@ -332,6 +402,13 @@ namespace DietFood.Helpers
             return res;
         }
 
+        public void DeleteIngredient(int ingredientId)
+        {
+            var res = _context.Ingredients.FirstOrDefault(x => x.Id == ingredientId);
+            if (res != null) _context.Ingredients.Remove(res);
+            _context.SaveChanges();
+        }
+
         public void DeleteProduct(int productId)
         {
             var res = _context.Products.FirstOrDefault(x => x.Id == productId);
@@ -339,9 +416,26 @@ namespace DietFood.Helpers
             _context.SaveChanges();
         }
 
-        public void UpdateProduct(Product data)
+        //public void UpdateProduct(Product data)
+        //{
+        //    var res = _context.Products.FirstOrDefault(x => x.Id == data.Id);
+        //    if (res != null)
+        //    {
+        //        res.Calories = data.Calories;
+        //        res.Carbohydrates = data.Carbohydrates;
+        //        res.Fats = data.Fats;
+        //        res.Name = data.Name;
+        //        res.Proteins = data.Proteins;
+        //        _context.Products.Update(res);
+        //        _context.SaveChanges();
+        //    }
+        //    else throw new Exception($"No Product whith id : '{data.Id}'!");
+
+        //}
+
+        public void UpdateIngredient(Ingredient data)
         {
-            var res = _context.Products.FirstOrDefault(x => x.Id == data.Id);
+            var res = _context.Ingredients.FirstOrDefault(x => x.Id == data.Id);
             if (res != null)
             {
                 res.Calories = data.Calories;
@@ -349,10 +443,10 @@ namespace DietFood.Helpers
                 res.Fats = data.Fats;
                 res.Name = data.Name;
                 res.Proteins = data.Proteins;
-                _context.Products.Update(res);
+                _context.Ingredients.Update(res);
                 _context.SaveChanges();
             }
-            else throw new Exception($"No Product whith id : '{data.Id}'!");
+            else throw new Exception($"No Ingredient whith id : '{data.Id}'!");
 
         }
     }

@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace DietFood.Models
 {
-    public class Product
-    {
-
+    public class Ingredient
+    { 
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -18,10 +17,7 @@ namespace DietFood.Models
 
         public decimal Carbohydrates { get; set; }
 
-        public  decimal Calories { get; set; }
+        public decimal Calories { get; set; }
 
-        public List<Dish> Dishes { get; set; }
-
-        public List<ProductIngredient> ProductIngredients { get; set; }
     }
 }

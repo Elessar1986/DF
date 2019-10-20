@@ -1,0 +1,42 @@
+﻿@model DietFood.Models.ProductIngredient
+
+
+    <!-- Content Column -->
+
+
+        <!-- Project Card Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-success">Добавление ингридиента</h6>
+            </div>
+            <div class="card-body">
+                
+                <form class="user" method="post" data-ajax="true" data-ajax-url="/main/AddIngredientToProduct"
+                      data-ajax-method="post" data-ajax-failure="failed" data-ajax-success="AddIngredient(data)">
+                    @*data-ajax-update="#panel"*@
+                    <div class="form-group">
+                        <select asp-for="IngredientId" class="form-control" asp-items="ViewBag.Ingredients">
+                            <option selected="selected" disabled="disabled">Выберите ингридиент</option>
+                        </select>
+                        <span asp-validation-for="IngredientId"></span>
+                    </div>
+
+                    <div class="form-group row">
+
+                        <div class="col-sm-6 mb-3 mb-sm-0 range">
+                            <input asp-for="Weight" type="text" class="form-control" placeholder="вес">
+                            <span asp-validation-for="Weight"></span>
+                        </div>
+
+                    </div>
+
+                    <input asp-for="ProductId" type="hidden" />
+                <button class="btn btn-success btn-user btn-block" type="submit">
+                    Добавить ингридиент
+                </button>
+
+                </form>
+            </div>
+        </div>
+
+

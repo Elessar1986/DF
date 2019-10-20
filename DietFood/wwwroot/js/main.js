@@ -35,6 +35,15 @@ function AddDish(data) {
     
 }
 
+function AddIngredient(data) {
+    if (data.status == "ok") {
+        window.location = "/Main/AddIngredientToProduct?productId=" + data.productId
+    } else {
+        $("#panel").html(data);
+    }
+
+}
+
 function ConstOrInterval() {
     $('.radio-ConstOrInterval').change(function () {
 

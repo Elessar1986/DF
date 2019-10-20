@@ -25,6 +25,8 @@ namespace DietFood.Models
         public DbSet<DietProgram> DietPrograms { get; set; }
         public DbSet<Calculation> Calculations { get; set; }
         public DbSet<DishCalculation> DishCalculations { get; set; }
+        public DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<ProductIngredient> ProductIngredients { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,20 +34,20 @@ namespace DietFood.Models
               .Property(c => c.IsInterval)
                .HasConversion<int>();
 
-            modelBuilder.Entity<Product>().HasData(
-            new Product[]
+            modelBuilder.Entity<Ingredient>().HasData(
+            new Ingredient[]
             {
-                new Product { Name="Свекла", Proteins = 1.5M, Fats = 0.1M, Carbohydrates = 8.8M, Calories= 40.0M, Id = 1 },
-                new Product { Name="Курица (грудка вареная)", Proteins = 29.80M, Fats = 1.8M, Carbohydrates = 0.5M, Calories= 137.0M, Id = 2 },
-                new Product { Name="Овсяная каша на молоке", Proteins = 3.2M, Fats = 4.1M, Carbohydrates = 14.20M, Calories= 102.0M, Id = 3 },
-                new Product { Name="Орехи", Proteins = 15M, Fats = 40M, Carbohydrates = 20M, Calories= 500.0M, Id = 4 },
-                new Product { Name="Смесь Ягод", Proteins = 3.2M, Fats = 4.1M, Carbohydrates = 14.20M, Calories= 102.0M, Id = 5 },
-                new Product { Name="Тирамису", Proteins = 9.8M, Fats = 10.8M, Carbohydrates = 46.7M, Calories= 292.0M, Id = 6 },
-                new Product { Name="Телятина в Сливочно-Мясном Соусе", Proteins = 22.6M, Fats = 12.8M, Carbohydrates = 9.4M, Calories= 243M, Id = 7 },
-                new Product { Name="Кус-Кус с Овощами", Proteins = 1.3M, Fats = 6.3M, Carbohydrates = 7.3M, Calories= 91M, Id = 8 },
-                new Product { Name="Морковный Крем-Суп", Proteins = 3M, Fats = 13.5M, Carbohydrates = 13.1M, Calories= 178M, Id = 9 },
-                new Product { Name="Салат с Тунцом", Proteins = 9M, Fats = 8M, Carbohydrates = 3M, Calories= 120M, Id = 10 },
-                new Product { Name="Яйцо Пашот на Подушке из Шпината", Proteins = 7.2M, Fats = 15.9M, Carbohydrates = 1.7M, Calories= 176M, Id = 11 }
+                new Ingredient { Name="Свекла", Proteins = 1.5M, Fats = 0.1M, Carbohydrates = 8.8M, Calories= 40.0M, Id = 1 },
+                new Ingredient { Name="Курица (грудка вареная)", Proteins = 29.80M, Fats = 1.8M, Carbohydrates = 0.5M, Calories= 137.0M, Id = 2 },
+                new Ingredient { Name="Овсяная каша на молоке", Proteins = 3.2M, Fats = 4.1M, Carbohydrates = 14.20M, Calories= 102.0M, Id = 3 },
+                new Ingredient { Name="Орехи", Proteins = 15M, Fats = 40M, Carbohydrates = 20M, Calories= 500.0M, Id = 4 },
+                new Ingredient { Name="Смесь Ягод", Proteins = 3.2M, Fats = 4.1M, Carbohydrates = 14.20M, Calories= 102.0M, Id = 5 },
+                new Ingredient { Name="Тирамису", Proteins = 9.8M, Fats = 10.8M, Carbohydrates = 46.7M, Calories= 292.0M, Id = 6 },
+                new Ingredient { Name="Телятина в Сливочно-Мясном Соусе", Proteins = 22.6M, Fats = 12.8M, Carbohydrates = 9.4M, Calories= 243M, Id = 7 },
+                new Ingredient { Name="Кус-Кус с Овощами", Proteins = 1.3M, Fats = 6.3M, Carbohydrates = 7.3M, Calories= 91M, Id = 8 },
+                new Ingredient { Name="Морковный Крем-Суп", Proteins = 3M, Fats = 13.5M, Carbohydrates = 13.1M, Calories= 178M, Id = 9 },
+                new Ingredient { Name="Салат с Тунцом", Proteins = 9M, Fats = 8M, Carbohydrates = 3M, Calories= 120M, Id = 10 },
+                new Ingredient { Name="Яйцо Пашот на Подушке из Шпината", Proteins = 7.2M, Fats = 15.9M, Carbohydrates = 1.7M, Calories= 176M, Id = 11 }
 
             });
             modelBuilder.Entity<DietProgram>().HasData(

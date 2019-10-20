@@ -1,5 +1,4 @@
-﻿@model  IEnumerable<DietFood.Models.Product>
-
+﻿@model IEnumerable<DietFood.Models.Ingredient>
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
@@ -21,24 +20,24 @@
                 </thead>
 
                 <tbody>
-                    
+
                     @foreach (var item in Model)
                     {
                         var t = @Url.Action("EditWeek", new { weekId = item.Id });
-                    <tr>
-                        <td>@item.Name</td>
-                        <td>@item.Calories</td>
-                        <td>@item.Proteins</td>
-                        <td>@item.Fats</td>
-                        <td>@item.Carbohydrates</td>
-                        <td>
-                            <a href="@Url.Action("DeleteProduct", "Main", new { productId = item.Id })"
-                               onclick="return confirm('Вы уверены?')">
-                                <i class="fas fa-fw fa-trash-alt text-danger"></i>
-                            </a>
-                        </td>
-                        <td><a href="@Url.Action("AddIngredientToProduct", "Main", new { productId = item.Id })"><i class="fas fa-fw fa-edit text-warning"></i></a></td>
-                    </tr>
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.Calories</td>
+                            <td>@item.Proteins</td>
+                            <td>@item.Fats</td>
+                            <td>@item.Carbohydrates</td>
+                            <td>
+                                <a href="@Url.Action("DeleteIngredient", "Main", new { ingredientId = item.Id })"
+                                   onclick="return confirm('Вы уверены?')">
+                                    <i class="fas fa-fw fa-trash-alt text-danger"></i>
+                                </a>
+                            </td>
+                            <td><a href="@Url.Action("EditIngredient", "Main", new { ingredientId = item.Id })"><i class="fas fa-fw fa-edit text-warning"></i></a></td>
+                        </tr>
                     }
 
                 </tbody>

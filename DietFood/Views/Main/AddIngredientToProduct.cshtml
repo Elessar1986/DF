@@ -1,0 +1,130 @@
+﻿@model DietFood.Models.Product
+
+@using DietFood.Models;
+
+@*<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <a href="@Url.Action("EditDay", new { weekId = Model.WeekId, dayName = Model.Day.DayName})" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-arrow-alt-circle-left fa-sm text-white-50"></i> Назад</a>
+</div>*@
+
+<div class="row">
+
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Калории</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Calories</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-walking fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Белки</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Proteins</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-egg fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Жиры</div>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-auto">
+                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">@Model.Fats</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-hamburger fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Requests Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Углеводы</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Carbohydrates</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-carrot fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mb-4" id="panel">
+        <!-- Content Column -->
+        @*@Html.Partial("_AddDish", Model.Dishes[(int)ViewBag.DishId])*@
+        <partial name="_AddIngredient" model="new ProductIngredient() { ProductId = Model.Id }">
+    </div>
+    <div class="col-lg-6 mb-4">
+
+        <!-- Illustrations -->
+
+        @if (Model.ProductIngredients != null)
+        {
+            @foreach (var item in Model.ProductIngredients)
+            {
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">@item.Ingredient.Name</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                    <div class="h6 mb-0 font-weight-bold text-gray-800">
+                                        Калории: @item.Ingredient.Calories
+                                        Белки: @item.Ingredient.Proteins
+                                        Жиры: @item.Ingredient.Fats
+                                        Углеводы: @item.Ingredient.Carbohydrates
+                                    </div>
+                                    <div class="h6 mb-0 font-weight-bold text-gray-800">Вес: @item.Weight</div>
+                            </div>
+                            <div class="col-auto">
+
+                                @*<a href="@Url.Action("EditDish", "Main", new { dishId = item.Id })">
+                                        <i class="fas fa-edit fa-2x text-warning"></i>
+                                    </a>*@
+
+                                <a href="@Url.Action("DeleteProductIngredient","Main", new { Id = item.Id, productId = Model.Id })"><i class="fas fa-trash fa-2x text-danger"></i></a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        }
+
+    </div>
+</div>

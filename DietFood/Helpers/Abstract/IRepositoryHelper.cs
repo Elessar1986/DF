@@ -32,7 +32,19 @@ namespace DietFood.Helpers.Abstract
 
         Dish GetDish(int dishId);
 
-        Task AddProduct(Product product);
+        Task AddIngredient(Ingredient ingredient);
+
+        List<Ingredient> GetAllIngredients();
+
+        Ingredient GetIngredient(int ingredientId);
+
+        void DeleteIngredient(int ingredientId);
+
+        int AddProduct(Product product);
+
+        void AddProductIngredient(ProductIngredient data);
+
+        void DeleteProductIngredient(int itemId);
 
         Task<int> AddProgram(DietProgram program);
 
@@ -68,6 +80,6 @@ namespace DietFood.Helpers.Abstract
 
         void DeleteProduct(int productId);
 
-        void UpdateProduct(Product data);
+        void UpdateIngredient(Ingredient data);
     }
 }
