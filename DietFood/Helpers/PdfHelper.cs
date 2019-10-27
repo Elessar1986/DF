@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DietFood.Models;
+using DietFood.Models.Calculator;
 using DietFood.Models.Enums;
 using iText;
 using iText.IO.Font;
@@ -30,7 +31,7 @@ namespace DietFood.Helpers
             var bold = PdfFontFactory.CreateFont(FontConstants.HELVETICA_BOLD);
             var table = new Table(new float[] { 2, 1, 1, 1, 1, 1, 1, 1, 1, 1 });
             table.SetWidth(UnitValue.CreatePercentValue(100));
-            table.AddHeaderCell(new Cell().Add( new Paragraph("Name").SetFont(bold)));
+            table.AddHeaderCell(new Cell().Add(new Paragraph("Name").SetFont(bold)));
             table.AddHeaderCell(new Cell().Add(new Paragraph("1").SetFont(bold)));
             table.AddHeaderCell(new Cell().Add(new Paragraph("2").SetFont(bold)));
             table.AddHeaderCell(new Cell().Add(new Paragraph("3").SetFont(bold)));
@@ -96,5 +97,45 @@ namespace DietFood.Helpers
             return dest.ToArray();
         }
 
+        public byte[] CreateTable(List<AllDishWeightCalc> model, string week, string program, DaysOfWeek day)
+        {
+            MemoryStream dest = new MemoryStream();
+            var writer = new PdfWriter(dest);
+            var pdf = new PdfDocument(writer);
+            var document = new Document(pdf, PageSize.A4.Rotate());
+            document.SetMargins(10, 10, 10, 10);
+
+            var font = PdfFontFactory.CreateFont("wwwroot/FreeSans.ttf", "Cp1251", true);
+            var bold = PdfFontFactory.CreateFont("wwwroot/FreeSansBold.ttf", "Cp1251", true);
+            var table = new Table(new float[] { 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 });
+            table.SetWidth(UnitValue.CreatePercentValue(100));
+
+            table.AddHeaderCell(new Cell(1, 14).Add(
+                new Paragraph($"Неделя: {week} ({day.ToString()}) | Програма: {program} ").SetFont(bold)));
+
+            table.AddHeaderCell(new Cell().Add(new Paragraph("Название блюда").SetFont(bold)));
+            for (int i = 40; i <= 100; i += 5)
+                table.AddHeaderCell(new Cell().Add(new Paragraph(i.ToString()).SetFont(bold)));
+
+            foreach (var item in model)
+            {
+                var mealNameCel = new Cell(1, 14).Add(new Paragraph(item.MealTypeName).SetFont(bold));
+                table.AddCell(mealNameCel);
+                foreach (var dish in item.WeightCalcs)
+                {
+                    table.AddCell(new Cell().Add(new Paragraph(dish.Name).SetFont(font)));
+
+                    foreach (var w in dish.Weight)
+                    {
+                        table.AddCell(new Cell().Add(new Paragraph(w.ToString()).SetFont(font)));
+                    }
+                }
+
+
+            }
+            document.Add(table);
+            document.Close();
+            return dest.ToArray();
+        }
     }
 }

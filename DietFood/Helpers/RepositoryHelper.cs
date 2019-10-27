@@ -64,7 +64,7 @@ namespace DietFood.Helpers
 
         public Day GetDay(int weekId, DaysOfWeek dayName)
         {
-            var meal = _context.Days.Include(x => x.Week).Include(x => x.Meals).FirstOrDefault(x =>
+            var meal = _context.Days.Include(x => x.Week).Include(x => x.Calculations).Include(x => x.Meals).FirstOrDefault(x =>
                                     x.DayName == dayName &&
                                     x.WeekId == weekId);
             return meal;
@@ -448,6 +448,13 @@ namespace DietFood.Helpers
             }
             else throw new Exception($"No Ingredient whith id : '{data.Id}'!");
 
+        }
+
+        public void DeleteCalculationsByDay(Day day)
+        {
+            day.Calculations = null;
+            _context.Days.Update(day);
+            _context.SaveChanges();
         }
     }
 }

@@ -81,5 +81,7 @@ namespace DietFood.Helpers.Abstract
         void DeleteProduct(int productId);
 
         void UpdateIngredient(Ingredient data);
+
+        void DeleteCalculationsByDay(Day day);
     }
 }

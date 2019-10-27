@@ -497,7 +497,10 @@ namespace DietFood.Controllers
                 {
                     model = _repository.AddDay(new Day { WeekId = weekId, DayName = dayName });
                 }
-                //model = new Day() { WeekId = weekId, DayName = (DaysOfWeek)dayId };
+                else
+                {
+                    _repository.DeleteCalculationsByDay(model);
+                }
 
                 return View(model);
             }
@@ -710,20 +713,22 @@ namespace DietFood.Controllers
             }
             catch (Exception ex)
             {
-                return null;
+                throw ex;
             }
         }
 
-        public FileResult DownloadAllWeightPDF()
+        public FileResult DownloadAllWeightPDF(int dayId)
         {
             try
             {
-                var res = _pdfHelper.CreateTable();
-                return File(res, "application/pdf");
+                var day = _repository.GetDay(dayId);
+                var model = _foodCalculate.GetAllDayCalcForPDF(dayId);
+                var res = _pdfHelper.CreateTable(model, day.Week.Name, day.Week.DietProgram.Name, day.DayName);
+                return File(res, "application/pdf", $"{DateTime.Now}_allDayCalculation.pdf");
             }
             catch (Exception ex)
             {
-                return null;
+                throw ex;
             }
         }
     }

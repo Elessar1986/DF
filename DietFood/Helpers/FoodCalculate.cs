@@ -1,6 +1,7 @@
 ﻿using DietFood.Helpers.Abstract;
 using DietFood.Models;
 using DietFood.Models.Calculator;
+using DietFood.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -97,6 +98,41 @@ namespace DietFood.Helpers
             WriteCalculation(day, dishList, weight);
 
             return new CalculateModel();
+        }
+
+        public List<AllDishWeightCalc> GetAllDayCalcForPDF(int dayId)
+        {
+            var day = _repository.GetDay(dayId);
+            var res = new List<AllDishWeightCalc>(5);
+            for (int i = 40; i <= 100; i += 5)
+            {
+                if(!day.Calculations.Any(x => x.ClientWeight == i))
+                {
+                    CalculateDayInWeight(dayId, i);
+                }
+                var model = day.Calculations.FirstOrDefault(x => x.ClientWeight == i);
+                for (int k = 0; k < 5; k++)
+                {
+                    if (model.DishCalculations.Count(x => x.MealType == k) > 0)
+                    {
+                        if (i == 40)
+                        {
+                            res.Add(new AllDishWeightCalc());
+                            res[k].MealTypeName = ((MealName)k).ToString();
+                            res[k].WeightCalcs = new List<WeightCalc>();
+                        }
+                        var dc = model.DishCalculations.Where(x => x.MealType == k).ToList();
+                        for (int j = 0; j < dc.Count(); j++)
+                        {
+                            if (i == 40)
+                                res[k].WeightCalcs.Add(new WeightCalc { Name = dc[j].Name, Weight = new List<int>() });
+                            res[k].WeightCalcs[j].Weight.Add(dc[j].Weight);
+                        }
+                    }
+                }
+            }
+
+            return res;
         }
 
         private decimal GetDayCoefficient(DayCalculation day)
